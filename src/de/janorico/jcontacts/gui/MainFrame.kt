@@ -54,9 +54,9 @@ class MainFrame : JFrame() {
             })
             add(JMenu("Edit").apply {
                 setMnemonic('E')
-                add(MenuItem.create("New", 'N') { new() })
-                add(MenuItem.create("Delete", 'D') { delete() })
-                add(MenuItem.create("Refresh", 'R') { refresh() })
+                add(MenuItem.create("New", 'N', KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK)) { new() })
+                add(MenuItem.create("Delete", 'D', KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0)) { delete() })
+                add(MenuItem.create("Refresh", 'R', KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK)) { refresh() })
                 add(MenuItem.create("Settings", 'S') { settings() })
             })
             add(JMenu("Help").apply {
