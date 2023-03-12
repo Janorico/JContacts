@@ -178,26 +178,36 @@ object Dialogs {
         val columnComboBoxes = Array(Column.values().size - 2) {
             JComboBox(columnStrings)
         }
+        val contactsList = JList(UDM.data.contacts.toTypedArray())
         Dialog.showDialog("Print - Choose Columns", {
-            JPanel(GridLayout(4, 1)).apply {
-                add(JLabel("Font:"))
-                add(fontChooser)
-                add(JLabel("Columns:"))
-                add(JPanel(GridLayout(1, columnComboBoxes.size)).apply { for (comboBox in columnComboBoxes) add(comboBox) })
+            JPanel(BorderLayout()).apply {
+                add(JPanel(GridLayout(5, 1)).apply {
+                    add(JLabel("Font:"))
+                    add(fontChooser)
+                    add(JLabel("Columns:"))
+                    add(JPanel(GridLayout(1, columnComboBoxes.size)).apply { for (comboBox in columnComboBoxes) add(comboBox) })
+                    add(JLabel("Select contacts you want to print:"))
+                }, BorderLayout.NORTH)
+                contactsList.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+                contactsList.cellRenderer = ContactRenderer()
+                contactsList.selectedIndices = IntArray(UDM.data.contacts.size) { idx -> idx }
+                add(JScrollPane(contactsList))
             }
         }, {
             for (comboBox in columnComboBoxes) {
                 val selection = comboBox.selectedIndex - 1
                 if (selection > -1) columns.add(Column.values()[selection])
             }
-            if (columns.size > 0) print(columns.toTypedArray(), fontChooser.getActiveFont(Font.PLAIN), frame)
+            val dataToPrint = ArrayList<Contact>()
+            for (contact in contactsList.selectedValuesList) dataToPrint.add(contact)
+            if (columns.size > 0) print(columns.toTypedArray(), dataToPrint.toTypedArray(), fontChooser.getActiveFont(Font.PLAIN), frame)
             else OptionPane.showInformation("No columns selected!")
         }, {})
     }
 
-    private fun print(columns: Array<Column>, font: Font, frame: Frame) {
+    private fun print(columns: Array<Column>, data: Array<Contact>, font: Font, frame: Frame) {
         Toolkit.getDefaultToolkit().getPrintJob(frame, "JContacts: Print Contacts", null).notNull {
-            printPage(columns, UDM.data.contacts.toTypedArray(), font, this)
+            printPage(columns, data, font, this)
             this.end()
         }
     }
