@@ -46,20 +46,23 @@ class MainFrame : JFrame() {
         // Menu bar
         jMenuBar = JMenuBar().apply {
             add(JMenu("File").apply {
-                add(MenuItem.create("Export...") { Dialogs.showExport() })
-                add(MenuItem.create("Import...") { Dialogs.showImport { refresh() } })
-                add(MenuItem.create("Print", KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK)) { Dialogs.showPrint(this@MainFrame) })
-                add(MenuItem.create("Exit", KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK)) { exitProcess(0) })
+                setMnemonic('F')
+                add(MenuItem.create("Export...", 'E') { Dialogs.showExport() })
+                add(MenuItem.create("Import...", 'I') { Dialogs.showImport { refresh() } })
+                add(MenuItem.create("Print", 'P', KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK)) { Dialogs.showPrint(this@MainFrame) })
+                add(MenuItem.create("Exit", 'x', KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK)) { exitProcess(0) })
             })
             add(JMenu("Edit").apply {
-                add(MenuItem.create("New") { new() })
-                add(MenuItem.create("Delete") { delete() })
-                add(MenuItem.create("Refresh") { refresh() })
-                add(MenuItem.create("Settings") { settings() })
+                setMnemonic('E')
+                add(MenuItem.create("New", 'N') { new() })
+                add(MenuItem.create("Delete", 'D') { delete() })
+                add(MenuItem.create("Refresh", 'R') { refresh() })
+                add(MenuItem.create("Settings", 'S') { settings() })
             })
             add(JMenu("Help").apply {
+                setMnemonic('H')
                 add(MenuItem.create("Check for Updates") { Updates.check(statusBar) })
-                add(MenuItem.create("About", FlatHelpButtonIcon()) { Dialogs.showAbout() })
+                add(MenuItem.create("About", FlatHelpButtonIcon(), 'A') { Dialogs.showAbout() })
             })
         }
         // Components
