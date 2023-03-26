@@ -261,9 +261,8 @@ object Dialogs {
     }
 
     private enum class Column(val displayName: String) {
-        NAME("Name"), FIRST_NAME("First name"), LAST_NAME("Last name"), BIRTHDAY("Birthday"), JOB("Job"), HANDY_NUMBER("Handy number"), NUMBER("Number"), NUMBER_WORK("Number work"), EMAIL(
-            "Email"
-        );
+        NAME("Name"), FIRST_NAME("First name"), LAST_NAME("Last name"), BIRTHDAY("Birthday"), JOB("Job"),
+        HANDY_NUMBER("Handy number"), NUMBER("Number"), NUMBER_WORK("Number work"), EMAIL("Email"), GROUP("Group");
 
         fun string(contact: Contact): String? = when (this) {
             NAME -> "${contact.firstName} ${contact.lastName}"
@@ -275,6 +274,7 @@ object Dialogs {
             NUMBER -> contact.number
             NUMBER_WORK -> contact.numberWork
             EMAIL -> contact.email
+            GROUP -> contact.group
         }
     }
 

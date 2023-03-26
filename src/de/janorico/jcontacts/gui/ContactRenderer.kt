@@ -38,6 +38,7 @@ class ContactRenderer : ListCellRenderer<Contact> {
                 Handy number: ${value.handyNumber.notNull()}
                 Number: ${value.number.notNull()}
                 Email: ${value.email.notNull()}
+                Group: ${value.group.notNull()}
             """.trimIndent()
             add(JLabel(avatarIcon), BorderLayout.WEST)
             val detail = UDM.data.settings.detailStringEnabled
@@ -65,4 +66,5 @@ class ContactRenderer : ListCellRenderer<Contact> {
             .replace(UserSettings.BIRTHDAY_PLACEHOLDER, contact.birthday.toReadableString()).replace(UserSettings.JOB_PLACEHOLDER, contact.job.notNull())
             .replace(UserSettings.HANDY_NUMBER_PLACEHOLDER, contact.handyNumber.notNull()).replace(UserSettings.NUMBER_PLACEHOLDER, contact.number.notNull())
             .replace(UserSettings.NUMBER_WORK_PLACEHOLDER, contact.numberWork.notNull()).replace(UserSettings.EMAIL_PLACEHOLDER, contact.email.notNull())
+            .replace(UserSettings.GROUP_PLACEHOLDER, contact.group.notNull())
 }

@@ -27,6 +27,7 @@ data class Contact(
     var number: String?,
     var numberWork: String?,
     var email: String?,
+    var group: String?,
 ) : Comparable<Contact> {
     override fun compareTo(other: Contact): Int = when (UDM.data.settings.sortBy) {
         SortBy.FIRST_NAME -> this.firstName.compareTo(other.firstName, true)

@@ -131,6 +131,8 @@ class MainFrame : JFrame() {
                         Number work: ${contact.numberWork.notNull()}
                         <br>
                         Email: ${contact.email.notNull()}
+                        <br>
+                        Group: ${contact.group.notNull()}
                         </html>
                     """.trimIndent()
                         this@DetailPanel.isVisible = true
@@ -210,8 +212,12 @@ class MainFrame : JFrame() {
         val emailIn = JTextField(20).apply { isEnabled = false }
         default?.email.ifNull(email, emailIn) { emailIn.text = this }
         email.addChangeListener { emailIn.isEnabled = email.isSelected }
+        val group = JCheckBox("Group: ")
+        val groupIn = JComboBox(arrayOf("").plus(UDM.data.getGroups())).apply { isEnabled = false }
+        default?.group.ifNull(group, groupIn) { groupIn.selectedItem = this }
+        group.addChangeListener { groupIn.isEnabled = group.isSelected }
         Dialog.showDialog("$dialogTitle Contact", {
-            JPanel(GridLayout(8, 1)).apply {
+            JPanel(GridLayout(9, 1)).apply {
                 add(JPanel(BorderLayout()).apply {
                     add(JLabel("First name: "), BorderLayout.WEST)
                     add(firstNameIn)
@@ -245,6 +251,11 @@ class MainFrame : JFrame() {
                     add(email, BorderLayout.WEST)
                     add(emailIn)
                 })
+                add(JPanel(BorderLayout()).apply {
+                    add(group, BorderLayout.WEST)
+                    groupIn.isEditable = true
+                    add(groupIn)
+                })
             }
         }, {
             returnValue = Contact(
@@ -255,7 +266,8 @@ class MainFrame : JFrame() {
                 if (handyNumber.isSelected) handyNumberIn.text else null,
                 if (number.isSelected) numberIn.text else null,
                 if (numberWork.isSelected) numberWorkIn.text else null,
-                if (email.isSelected) emailIn.text else null
+                if (email.isSelected) emailIn.text else null,
+                if (group.isSelected) groupIn.selectedItem?.toString() else null
             )
         }, {})
         return returnValue

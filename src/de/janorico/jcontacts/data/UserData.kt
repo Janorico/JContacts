@@ -88,6 +88,7 @@ object UDM {
                 contact.number.notNull { setAttribute("number", this) }
                 contact.numberWork.notNull { setAttribute("number-private", this) }
                 contact.email.notNull { setAttribute("email", this) }
+                contact.group.notNull { setAttribute("group", this) }
             })
         })
         element.appendChild(doc.createElement("settings").apply {
@@ -144,7 +145,8 @@ object UDM {
                         child.getAttribute("handy-number").ifBlank { null },
                         child.getAttribute("number").ifBlank { null },
                         child.getAttribute("number-work").ifBlank { null },
-                        child.getAttribute("email").ifBlank { null })
+                        child.getAttribute("email").ifBlank { null },
+                        child.getAttribute("group").ifBlank { null })
                 )
             }
         }
@@ -158,8 +160,7 @@ object UDM {
                 SortBy.valueOf(getAttribute("sort-by").ifBlank { "LAST_NAME" })
             )
         }
-        if (settings.sortBy != SortBy.NONE)
-            contacts.sort()
+        if (settings.sortBy != SortBy.NONE) contacts.sort()
         //contacts.sortWith(AlphabeticalComparator { if (settings.sortBy == SortBy.FIRST_NAME) it.firstName else it.lastName })
         return UserData(contacts, settings, (element.hasAttribute("license-agreed") && (element.getAttribute("license-agreed") == "true")))
     }
@@ -167,7 +168,18 @@ object UDM {
 
 data class UserData(val contacts: ArrayList<Contact>, var settings: UserSettings, var licenseAgreed: Boolean) {
     companion object {
-        val DEFAULT = UserData(arrayListOf(Contact("Janorico", "", null, null, null, null, null,"janorico@posteo.de")), UserSettings.DEFAULT, false)
+        val DEFAULT = UserData(arrayListOf(Contact("Janorico", "", null, null, null, null, null, "janorico@posteo.de", null)), UserSettings.DEFAULT, false)
+    }
+
+    fun getGroups(): Array<String> {
+        val list = ArrayList<String>()
+        for (contact in contacts) {
+            val group = contact.group
+            if (group != null && !list.contains(group)) {
+                list.add(group)
+            }
+        }
+        return list.toTypedArray()
     }
 }
 
@@ -181,6 +193,7 @@ data class UserSettings(val theme: Theme, val titleString: String, val detailStr
         const val NUMBER_PLACEHOLDER = "\$n"
         const val NUMBER_WORK_PLACEHOLDER = "\$nw"
         const val EMAIL_PLACEHOLDER = "\$e"
+        const val GROUP_PLACEHOLDER = "\$g"
         val DEFAULT = UserSettings(Theme.DARK, "\$fn \$ln", "Phone: \$n  Handy: \$hn", true, SortBy.LAST_NAME)
     }
 }
