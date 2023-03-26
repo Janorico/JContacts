@@ -53,7 +53,7 @@ object Updates {
                         } else throw IOException("Error while downloading!")
                     } else throw UnsupportedOperationException("Auto-update works only on Windows!")
                 }
-            }
+            } else statusBar.displayMessage("You are running the newest version of JContacts.")
         } catch (e: Exception) {
             statusBar.stopProgress()
             statusBar.displayError("Can't check for updates (${e::class.qualifiedName})! Message: ${e.message}")
