@@ -262,12 +262,12 @@ class MainFrame : JFrame() {
                 firstNameIn.text,
                 lastNameIn.text,
                 if (birthday.isSelected) birthdayIn.birthday else null,
-                if (job.isSelected) jobIn.selectedItem?.toString() else null,
-                if (handyNumber.isSelected) handyNumberIn.text else null,
-                if (number.isSelected) numberIn.text else null,
-                if (numberWork.isSelected) numberWorkIn.text else null,
-                if (email.isSelected) emailIn.text else null,
-                if (group.isSelected) groupIn.selectedItem?.toString() else null
+                if (job.isSelected && !jobIn.selectedItem?.toString().isNullOrBlank()) jobIn.selectedItem?.toString() else null,
+                if (handyNumber.isSelected && !handyNumberIn.text.isNullOrBlank()) handyNumberIn.text else null,
+                if (number.isSelected && !numberIn.text.isNullOrBlank()) numberIn.text else null,
+                if (numberWork.isSelected && !numberWorkIn.text.isNullOrBlank()) numberWorkIn.text else null,
+                if (email.isSelected && !emailIn.text.isNullOrBlank()) emailIn.text else null,
+                if (group.isSelected && !groupIn.selectedItem?.toString().isNullOrBlank()) groupIn.selectedItem?.toString() else null
             )
         }, {})
         return returnValue
