@@ -59,6 +59,9 @@ fun <T> T?.ifNull(checkBox: JCheckBox, c: Container, notNull: T.() -> Unit) {
     }
 }
 
+fun <This, Other, Out> This?.notNull(other: Other?, defaultValue: Out, onNotNull: This.(other: Other) -> Out): Out =
+    if (this == null || other == null) defaultValue else this.onNotNull(other)
+
 fun String.intOrNull(): Int? = if (isBlank()) null
 else toInt()
 

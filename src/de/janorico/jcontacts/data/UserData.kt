@@ -203,5 +203,5 @@ enum class Theme {
 }
 
 enum class SortBy {
-    NONE, FIRST_NAME, LAST_NAME
+    NONE, FIRST_NAME, LAST_NAME, GROUP
 }

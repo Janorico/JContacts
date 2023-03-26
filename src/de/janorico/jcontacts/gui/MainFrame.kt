@@ -291,8 +291,8 @@ class MainFrame : JFrame() {
         val titleStringField = JTextField(20)
         val detailStringField = JTextField(20)
         val detailStringEnabledCheckBox = JCheckBox("Detail")
-        val sortBy = arrayOf(SortBy.NONE, SortBy.FIRST_NAME, SortBy.LAST_NAME)
-        val sortByBox = JComboBox(arrayOf("None", "First name", "Last name"))
+        val sortBy = arrayOf(SortBy.NONE, SortBy.FIRST_NAME, SortBy.LAST_NAME, SortBy.GROUP)
+        val sortByBox = JComboBox(arrayOf("None", "First name", "Last name", "Group"))
         //
         Dialog.showDialog("Settings", {
             JPanel(GridLayout(5, 1)).apply {

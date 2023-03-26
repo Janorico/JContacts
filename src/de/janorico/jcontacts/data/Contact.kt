@@ -18,6 +18,8 @@
 
 package de.janorico.jcontacts.data
 
+import de.janorico.jcontacts.notNull
+
 data class Contact(
     var firstName: String,
     var lastName: String,
@@ -32,6 +34,7 @@ data class Contact(
     override fun compareTo(other: Contact): Int = when (UDM.data.settings.sortBy) {
         SortBy.FIRST_NAME -> this.firstName.compareTo(other.firstName, true)
         SortBy.LAST_NAME -> this.lastName.compareTo(other.lastName, true)
+        SortBy.GROUP -> this.group.notNull(other.group, 0) { otherGroup: String -> this.compareTo(otherGroup) }
         else -> 0
     }
 }
