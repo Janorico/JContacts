@@ -35,6 +35,7 @@ import java.time.LocalDate
 import javax.swing.*
 import javax.swing.event.HyperlinkEvent
 import javax.swing.filechooser.FileNameExtensionFilter
+import javax.swing.tree.DefaultMutableTreeNode
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
 
@@ -257,6 +258,31 @@ object Dialogs {
                 printPage(columns, data.copyOfRange((i + 1), data.size), font, printJob)
                 return
             }
+        }
+    }
+
+    fun showGroups() {
+        Dialog.showDialog("Groups", {
+            it.preferredSize=Dimension(600,450)
+            JScrollPane(JTree(getGroupsNode()).apply {
+                cellRenderer = ContactRenderer()
+                setSelectionRow(0)
+            })
+        }, { dialog: JDialog -> Button.create("Close") { dialog.dispose() } })
+    }
+
+    private fun getGroupsNode(): DefaultMutableTreeNode = DefaultMutableTreeNode("Groups").apply {
+        val groups = UDM.data.getGroupsWithNoGroup("No Group")
+        val groupNodes = buildMap {
+            for (group in groups) {
+                this[group] = DefaultMutableTreeNode(group, true)
+            }
+        }
+        for (contact in UDM.data.contacts) {
+            (groupNodes[contact.group ?: "No Group"] ?: throw Exception("Can't find group ${contact.group}!")).add(DefaultMutableTreeNode(contact, false))
+        }
+        for (group in groupNodes.values) {
+            this.add(group)
         }
     }
 

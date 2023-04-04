@@ -181,6 +181,17 @@ data class UserData(val contacts: ArrayList<Contact>, var settings: UserSettings
         }
         return list.toTypedArray()
     }
+
+    fun getGroupsWithNoGroup(noGroupName: String): Array<String> {
+        val list = ArrayList<String>()
+        for (contact in contacts) {
+            val group = contact.group ?: noGroupName
+            if (!list.contains(group)) {
+                list.add(group)
+            }
+        }
+        return list.toTypedArray()
+    }
 }
 
 data class UserSettings(val theme: Theme, val titleString: String, val detailString: String, val detailStringEnabled: Boolean, val sortBy: SortBy) {

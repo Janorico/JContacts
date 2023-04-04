@@ -22,13 +22,60 @@ import de.janorico.jcontacts.*
 import de.janorico.jcontacts.data.*
 import java.awt.*
 import javax.swing.*
+import javax.swing.tree.*
 
-class ContactRenderer : ListCellRenderer<Contact> {
+class ContactRenderer : ListCellRenderer<Contact>, TreeCellRenderer {
     companion object {
         private val avatarIcon = RM.getIcon("Avatar32")
     }
 
     override fun getListCellRendererComponent(list: JList<out Contact>, value: Contact, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component {
+        return getContactComponent(value, isSelected, list.selectionForeground, list.selectionBackground, list.foreground, list.background)
+    }
+
+    override fun getTreeCellRendererComponent(tree: JTree, value: Any, selected: Boolean, expanded: Boolean, leaf: Boolean, row: Int, hasFocus: Boolean): Component {
+        return if (value is DefaultMutableTreeNode) {
+            val userObject = value.userObject
+            if (userObject is Contact) {
+                getContactComponent(userObject, selected, tree.foreground, tree.background, tree.foreground, tree.background, false)
+            } else {
+                getStringComponent(value, selected, tree.foreground, tree.background, tree.foreground, tree.background)
+            }
+        } else {
+            getStringComponent(value, selected, tree.foreground, tree.background, tree.foreground, tree.background)
+        }
+    }
+
+    private fun getStringComponent(
+        value: Any,
+        selected: Boolean,
+        selectionForeground: Color?,
+        selectionBackground: Color?,
+        foreground: Color?,
+        background: Color?,
+        opaque: Boolean = false,
+    ): Component {
+        return JLabel(value.toString()).apply {
+            isOpaque = opaque
+            if (selected) {
+                this.foreground = selectionForeground
+                this.background = selectionBackground
+            } else {
+                this.foreground = foreground
+                this.background = background
+            }
+        }
+    }
+
+    private fun getContactComponent(
+        value: Contact,
+        selected: Boolean,
+        selectionForeground: Color?,
+        selectionBackground: Color?,
+        foreground: Color?,
+        background: Color?,
+        opaque: Boolean = true,
+    ): Component {
         return JPanel(BorderLayout()).apply {
             toolTipText = """
                 First name: ${value.firstName}
@@ -46,20 +93,23 @@ class ContactRenderer : ListCellRenderer<Contact> {
                 add(JLabel(placeholder(UDM.data.settings.titleString, value)).apply { font = Font(font.name, Font.BOLD, font.size) })
                 if (detail) add(JLabel(placeholder(UDM.data.settings.detailString, value)))
             }
-            if (isSelected) {
-                this.foreground = list.selectionForeground
-                this.background = list.selectionBackground
-                panel.foreground = list.selectionForeground
-                panel.background = list.selectionBackground
+            this.isOpaque = opaque
+            panel.isOpaque = opaque
+            if (selected) {
+                this.foreground = selectionForeground
+                this.background = selectionBackground
+                panel.foreground = selectionForeground
+                panel.background = selectionBackground
             } else {
-                this.foreground = list.foreground
-                this.background = list.background
-                panel.foreground = list.foreground
-                panel.background = list.background
+                this.foreground = foreground
+                this.background = background
+                panel.foreground = foreground
+                panel.background = background
             }
             add(panel)
         }
     }
+
 
     private fun placeholder(placeholder: String, contact: Contact): String =
         placeholder.replace(UserSettings.FIRST_NAME_PLACEHOLDER, contact.firstName).replace(UserSettings.LAST_NAME_PLACEHOLDER, contact.lastName)
