@@ -182,16 +182,50 @@ object Dialogs {
         val contactsList = JList(UDM.data.contacts.toTypedArray())
         Dialog.showDialog("Print - Choose Columns", {
             JPanel(BorderLayout()).apply {
+                val allIndices = IntArray(UDM.data.contacts.size) { idx -> idx }
                 add(JPanel(GridLayout(5, 1)).apply {
                     add(JLabel("Font:"))
                     add(fontChooser)
                     add(JLabel("Columns:"))
                     add(JPanel(GridLayout(1, columnComboBoxes.size)).apply { for (comboBox in columnComboBoxes) add(comboBox) })
-                    add(JLabel("Select contacts you want to print:"))
+                    add(JPanel(BorderLayout()).apply {
+                        this.add(JLabel("Select contacts you want to print:"))
+                        this.add(JComboBox(arrayOf("All").plus(UDM.data.getGroupsWithNoGroup("No Group"))).apply {
+                            addActionListener {
+                                when (selectedIndex) {
+                                    0 -> contactsList.selectedIndices = allIndices
+
+                                    1 -> {
+                                        val contacts = UDM.data.contacts
+                                        val selectedIndices = ArrayList<Int>()
+                                        for (i in contacts.indices) {
+                                            val contact = contacts[i]
+                                            if (contact.group == null) {
+                                                selectedIndices.add(i)
+                                            }
+                                        }
+                                        contactsList.selectedIndices = selectedIndices.toIntArray()
+                                    }
+
+                                    else -> {
+                                        val contacts = UDM.data.contacts
+                                        val selectedIndices = ArrayList<Int>()
+                                        for (i in contacts.indices) {
+                                            val contact = contacts[i]
+                                            if (contact.group == selectedItem?.toString()) {
+                                                selectedIndices.add(i)
+                                            }
+                                        }
+                                        contactsList.selectedIndices = selectedIndices.toIntArray()
+                                    }
+                                }
+                            }
+                        }, BorderLayout.EAST)
+                    })
                 }, BorderLayout.NORTH)
                 contactsList.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
                 contactsList.cellRenderer = ContactRenderer()
-                contactsList.selectedIndices = IntArray(UDM.data.contacts.size) { idx -> idx }
+                contactsList.selectedIndices = allIndices
                 add(JScrollPane(contactsList))
             }
         }, {
@@ -263,7 +297,7 @@ object Dialogs {
 
     fun showGroups() {
         Dialog.showDialog("Groups", {
-            it.preferredSize=Dimension(600,450)
+            it.preferredSize = Dimension(600, 450)
             JScrollPane(JTree(getGroupsNode()).apply {
                 cellRenderer = ContactRenderer()
                 setSelectionRow(0)
