@@ -21,6 +21,7 @@ package de.janorico.jcontacts.data
 import com.formdev.flatlaf.*
 import com.formdev.flatlaf.themes.*
 import de.janorico.jcontacts.*
+import de.janorico.jcontacts.gui.theme.*
 import org.w3c.dom.Element
 import java.io.*
 import javax.xml.parsers.DocumentBuilderFactory
@@ -38,6 +39,8 @@ object UDM {
     fun refresh() {
         data = load()
         when (data.settings.theme) {
+            Theme.JCONTACTS_LIGHT -> JContactsLight.setup()
+            Theme.JCONTACTS_DARK -> JContactsDark.setup()
             Theme.LIGHT -> FlatLightLaf.setup()
             Theme.DARK -> FlatDarkLaf.setup()
             Theme.INTELLIJ -> FlatIntelliJLaf.setup()
@@ -153,7 +156,7 @@ object UDM {
         var settings = UserSettings.DEFAULT
         (element.getElementsByTagName("settings").item(0) as Element).apply {
             settings = UserSettings(
-                Theme.valueOf(getAttribute("theme").ifBlank { "DARK" }),
+                Theme.valueOf(getAttribute("theme").ifBlank { "JCONTACTS_DARK" }),
                 getAttribute("title-string"),
                 getAttribute("detail-string"),
                 getAttribute("detail-string-enabled").toBoolean(),
@@ -205,12 +208,12 @@ data class UserSettings(val theme: Theme, val titleString: String, val detailStr
         const val NUMBER_WORK_PLACEHOLDER = "\$nw"
         const val EMAIL_PLACEHOLDER = "\$e"
         const val GROUP_PLACEHOLDER = "\$g"
-        val DEFAULT = UserSettings(Theme.DARK, "\$fn \$ln", "Phone: \$n  Handy: \$hn", true, SortBy.LAST_NAME)
+        val DEFAULT = UserSettings(Theme.JCONTACTS_DARK, "\$fn \$ln", "Phone: \$n  Handy: \$hn", true, SortBy.LAST_NAME)
     }
 }
 
 enum class Theme {
-    LIGHT, DARK, INTELLIJ, DARCULA, MAC_LIGHT, MAC_DARK
+    JCONTACTS_LIGHT, JCONTACTS_DARK, LIGHT, DARK, INTELLIJ, DARCULA, MAC_LIGHT, MAC_DARK
 }
 
 enum class SortBy {
