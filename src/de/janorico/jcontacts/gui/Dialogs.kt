@@ -201,7 +201,12 @@ object Dialogs {
             if (result == JFileChooser.APPROVE_OPTION && selectedFile != null) {
                 var file: File = selectedFile
                 if (!file.path.endsWith(".xml")) file = File("${selectedFile.path}.xml")
-                UDM.write(file)
+                if (file.isFile) {
+                    val overwrite = OptionPane.overwriteFileDialog(file.path)
+                    if (overwrite == JOptionPane.YES_OPTION) {
+                        UDM.write(file)
+                    }
+                }
             }
         }, xmlFilter)
     }
