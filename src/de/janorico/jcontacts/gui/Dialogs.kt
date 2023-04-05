@@ -141,13 +141,47 @@ object Dialogs {
                 Dialog.showDialog("Import", {
                     it.preferredSize = Dimension(800, 600)
                     JPanel(BorderLayout()).apply {
+                        val allIndices = IntArray(importedData.contacts.size) { idx -> idx }
                         add(JPanel(GridLayout(2, 1)).apply OptionsPanel@{
                             add(replaceSettings)
-                            add(JLabel("Select contacts you want to import:"))
+                            add(JPanel(BorderLayout()).apply {
+                                this.add(JLabel("Select contacts you want to import:"))
+                                this.add(JComboBox(arrayOf("All").plus(importedData.getGroupsWithNoGroup("No Group"))).apply {
+                                    addActionListener {
+                                        when (selectedIndex) {
+                                            0 -> selectList.selectedIndices = allIndices
+
+                                            1 -> {
+                                                val contacts = importedData.contacts
+                                                val selectedIndices = ArrayList<Int>()
+                                                for (i in contacts.indices) {
+                                                    val contact = contacts[i]
+                                                    if (contact.group == null) {
+                                                        selectedIndices.add(i)
+                                                    }
+                                                }
+                                                selectList.selectedIndices = selectedIndices.toIntArray()
+                                            }
+
+                                            else -> {
+                                                val contacts = importedData.contacts
+                                                val selectedIndices = ArrayList<Int>()
+                                                for (i in contacts.indices) {
+                                                    val contact = contacts[i]
+                                                    if (contact.group == selectedItem?.toString()) {
+                                                        selectedIndices.add(i)
+                                                    }
+                                                }
+                                                selectList.selectedIndices = selectedIndices.toIntArray()
+                                            }
+                                        }
+                                    }
+                                }, BorderLayout.EAST)
+                            })
                         }, BorderLayout.NORTH)
                         selectList.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
                         selectList.cellRenderer = ContactRenderer()
-                        selectList.selectedIndices = IntArray(importedData.contacts.size) { idx -> idx }
+                        selectList.selectedIndices = allIndices
                         add(JScrollPane(selectList))
                     }
                 }, {
