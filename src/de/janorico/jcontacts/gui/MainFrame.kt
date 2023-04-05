@@ -287,8 +287,8 @@ class MainFrame : JFrame() {
 
     private fun settings() {
         // Theme
-        val themes = arrayOf(Theme.LIGHT, Theme.DARK, Theme.INTELLIJ, Theme.DARCULA, Theme.MAC_LIGHT, Theme.MAC_DARK)
-        val themeBox = JComboBox(arrayOf("Light", "Dark", "IntelliJ", "Darcula", "Mac Light", "Mac Dark"))
+        val themes = arrayOf(Theme.JCONTACTS_LIGHT, Theme.JCONTACTS_DARK, Theme.LIGHT, Theme.DARK, Theme.INTELLIJ, Theme.DARCULA, Theme.MAC_LIGHT, Theme.MAC_DARK)
+        val themeBox = JComboBox(arrayOf("JContacts Light", "JContacts Dark", "Light", "Dark", "IntelliJ", "Darcula", "Mac Light", "Mac Dark"))
         val titleStringField = JTextField(20)
         val detailStringField = JTextField(20)
         val detailStringEnabledCheckBox = JCheckBox("Detail")
