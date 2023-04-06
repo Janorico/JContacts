@@ -21,7 +21,7 @@ package de.janorico.jcontacts
 import de.janorico.jcontacts.gui.StatusBar
 import de.janorico.jgl.helpers.OptionPane
 import java.io.*
-import java.net.URL
+import java.net.*
 import java.util.*
 import javax.swing.JOptionPane
 import kotlin.math.roundToInt
@@ -31,7 +31,7 @@ object Updates {
     fun check(statusBar: StatusBar) {
         try {
             statusBar.indeterminateProgress("Receiving update info...")
-            val stream = URL("https://github.com/Janorico/Versions/raw/main/JContacts.properties").openStream()
+            val stream = URI("https://github.com/Janorico/Versions/raw/main/JContacts.properties").toURL().openStream()
             val properties = Properties()
             properties.load(stream)
             stream.close()
@@ -45,7 +45,7 @@ object Updates {
                         val newVersionWindowsInstaller =
                             properties.getProperty("newest-version.windows-installer", null) ?: throw IOException("Can't get newest version windows installer URL!")
                         val outFile = File(System.getProperty("user.home") + "/Downloads", "$newVersionName-Installer.exe")
-                        if (downloadFile(URL(newVersionWindowsInstaller), outFile, statusBar)) {
+                        if (downloadFile(URI(newVersionWindowsInstaller).toURL(), outFile, statusBar)) {
                             if (OptionPane.showConfirmDialog("Updates downloaded! Install now (JContacts will be exited)?", "Update downloaded", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                                 Runtime.getRuntime().exec(arrayOf(outFile.path))
                                 exitProcess(0)
