@@ -21,6 +21,7 @@ package de.janorico.jcontacts.gui
 import de.janorico.jcontacts.*
 import de.janorico.jcontacts.data.*
 import de.janorico.jcontacts.gui.Dialogs.FontUtil.drawCenteredString
+import de.janorico.jcontacts.gui.Dialogs.FontUtil.drawString1
 import de.janorico.jgl.JGL
 import de.janorico.jgl.components.FontChooser
 import de.janorico.jgl.helpers.*
@@ -218,11 +219,13 @@ object Dialogs {
         val columnComboBoxes = Array(Column.values().size - 2) {
             JComboBox(columnStrings)
         }
+        val centerText = JCheckBox("Center Text")
         val contactsList = JList(UDM.data.contacts.toTypedArray())
         Dialog.showDialog("Print - Choose Columns", {
             JPanel(BorderLayout()).apply {
                 val allIndices = IntArray(UDM.data.contacts.size) { idx -> idx }
-                add(JPanel(GridLayout(5, 1)).apply {
+                add(JPanel(GridLayout(6, 1)).apply {
+                    add(centerText)
                     add(JLabel("Font:"))
                     add(fontChooser)
                     add(JLabel("Columns:"))
@@ -274,19 +277,19 @@ object Dialogs {
             }
             val dataToPrint = ArrayList<Contact>()
             for (contact in contactsList.selectedValuesList) dataToPrint.add(contact)
-            if (columns.size > 0) print(columns.toTypedArray(), dataToPrint.toTypedArray(), fontChooser.getActiveFont(Font.PLAIN), frame)
+            if (columns.size > 0) print(columns.toTypedArray(), dataToPrint.toTypedArray(), fontChooser.getActiveFont(Font.PLAIN), centerText.isSelected, frame)
             else OptionPane.showInformation("No columns selected!")
         }, {})
     }
 
-    private fun print(columns: Array<Column>, data: Array<Contact>, font: Font, frame: Frame) {
+    private fun print(columns: Array<Column>, data: Array<Contact>, font: Font, centerText: Boolean, frame: Frame) {
         Toolkit.getDefaultToolkit().getPrintJob(frame, "JContacts: Print Contacts", null).notNull {
-            printPage(columns, data, font, this)
+            printPage(columns, data, font, centerText, this)
             this.end()
         }
     }
 
-    private fun printPage(columns: Array<Column>, data: Array<Contact>, font: Font, printJob: PrintJob) {
+    private fun printPage(columns: Array<Column>, data: Array<Contact>, font: Font, centerText: Boolean, printJob: PrintJob) {
         val size = printJob.pageDimension
         val g = printJob.graphics
         // Set font
@@ -319,7 +322,11 @@ object Dialogs {
             for (j in columns.indices) {
                 val x = (10 + (difference * (j + 1)))
                 columns[j].string(data[i]).notNull {
-                    (g.drawCenteredString(this, (startY + 2), x, (x - difference)) + 4).apply {
+                    ((if (centerText) {
+                        g.drawCenteredString(this, (startY + 2), x, (x - difference))
+                    } else {
+                        g.drawString1(this, (startY + 2), ((x - difference) + 2))
+                    }) + 4).apply {
                         if (this > tempY) tempY = this
                     }
                 }
@@ -328,7 +335,7 @@ object Dialogs {
             g.drawLine(10, startY, size.width - 10, startY)
             if (startY >= (endY - font.size)) {
                 g.dispose()
-                printPage(columns, data.copyOfRange((i + 1), data.size), font, printJob)
+                printPage(columns, data.copyOfRange((i + 1), data.size), font, centerText, printJob)
                 return
             }
         }
@@ -390,6 +397,13 @@ object Dialogs {
             val width = end - start
             drawString(str, (start + ((width - size.width) / 2)).roundToInt(), y + size.height.roundToInt())
             return size.height.roundToInt() + y
+        }
+
+        fun Graphics.drawString1(str: String, y: Int, x: Int): Int {
+            val size = getFontBounds(this.font, str)
+            val y1 = size.height.roundToInt() + y
+            drawString(str, x, y1)
+            return y1
         }
     }
 }
