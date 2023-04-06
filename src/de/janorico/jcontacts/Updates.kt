@@ -38,7 +38,7 @@ object Updates {
             statusBar.stopProgress()
             val newVersionKey = (properties.getProperty("newest-version.key", null) ?: throw IOException("Can't get newest version key!")).toFloatOrNull()
                 ?: throw IOException("Can't convert newest version key to float!")
-            if (newVersionKey > 1.2) {
+            if (newVersionKey > 1.2f) {
                 val newVersionName = properties.getProperty("newest-version.display-name", null) ?: throw IOException("Can't get newest version name!")
                 if (OptionPane.showOptionDialog("$newVersionName is available!", "Update available", arrayOf("Update", "Do nothing"), 0) == 0) {
                     if (System.getProperty("os.name").contains("windows", true)) {
