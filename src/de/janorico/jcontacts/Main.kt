@@ -70,7 +70,6 @@ fun String?.notNull(): String = if (isNullOrBlank()) "none" else this
 object Jobs {
     // Source: https://visualdictionary.org/list-of-jobs/, 26.2.2023 (Sorted alphabetical)
     val jobs = arrayOf(
-        "",
         "Accountant",
         "Actor",
         "Actress",

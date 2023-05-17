@@ -214,7 +214,7 @@ class MainFrame : JFrame() {
         default?.email.ifNull(email, emailIn) { emailIn.text = this }
         email.addChangeListener { emailIn.isEnabled = email.isSelected }
         val group = JCheckBox("Group: ")
-        val groupIn = JComboBox(arrayOf("").plus(UDM.data.getGroups())).apply { isEnabled = false }
+        val groupIn = JComboBox(UDM.data.getGroups()).apply { isEnabled = false }
         default?.group.ifNull(group, groupIn) { groupIn.selectedItem = this }
         group.addChangeListener { groupIn.isEnabled = group.isSelected }
         Dialog.showDialog("$dialogTitle Contact", {
