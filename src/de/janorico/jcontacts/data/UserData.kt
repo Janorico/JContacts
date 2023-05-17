@@ -40,6 +40,7 @@ object UDM {
         data = load()
         when (data.settings.theme) {
             Theme.JCONTACTS_LIGHT -> JContactsLight.setup()
+            Theme.JCONTACTS_GRAY -> JContactsGray.setup()
             Theme.JCONTACTS_DARK -> JContactsDark.setup()
             Theme.LIGHT -> FlatLightLaf.setup()
             Theme.DARK -> FlatDarkLaf.setup()
@@ -213,7 +214,7 @@ data class UserSettings(val theme: Theme, val titleString: String, val detailStr
 }
 
 enum class Theme {
-    JCONTACTS_LIGHT, JCONTACTS_DARK, LIGHT, DARK, INTELLIJ, DARCULA, MAC_LIGHT, MAC_DARK
+    JCONTACTS_LIGHT, JCONTACTS_GRAY, JCONTACTS_DARK, LIGHT, DARK, INTELLIJ, DARCULA, MAC_LIGHT, MAC_DARK
 }
 
 enum class SortBy {
